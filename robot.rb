@@ -61,10 +61,6 @@ def get_initial_trans_for(_world)
 end
 
 def get_initial_joint_prediction_matrix_for(_world)
-  # determine the width of the world
-  # world_width = _world.column_vectors().size
-  # world_height = _world.row_vectors().size
-  # world_size = world_width*world_height
   # initialize prediction matrix array
   pred_array = Array.new(_world.size).map {Array.new(1,0)}
   # initialize probability that will be assigned to all eligible rooms
