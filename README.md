@@ -21,6 +21,63 @@ Then the corresponding Grid World is:
 
 ![Image of Grid World](Images/GridWorld1.png)
 
+<a name="testExamples"></a>
+####Testing Your Program
+Once you compile your program, run your executable.  Assuming it is named "robot," test your program with the following:
+<pre>
+./robot input.txt 0.1 NW NS
+</pre>
+In the above example,  
+  * **input.txt** stores the information of your grid world
+  * **0.1** represents the *sensory error*
+  * **NW** **NS** is the *given sequence of observations* at time 1 and 2
+
+The output of the program should be:  
+<pre>
+(0, 1) 0.998408
+</pre>
+
+The output shows that the robot is in row **0** and column **1** of the grid world and that the state *estimation probability* at time 2 at this location equals to **0.998408**, the maximum state estimation probability over all locations.
+
+If more than one location has the maximum probability, output all of the locations corresponding to the maximum state estimation probability in the format shown above (one location per line).
+
+##Examples
+<a name="dirExamples"></a>
+####Directional Input Examples
+* **Obstacle = 1** ( This means that you cannot move to an open space, Labeled White )
+* **Free = 0** ( This means that you can move to an open space, Labeled Grey )  
+
+Directions | Binary
+-----------|---------
+Given NS | 1100
+Given NSW| 1110
+Given NE | 1010
+Given EW | 0011
+
+From these examples, you should easily be able to figure out any other variations.  
+
+
+<a name="binaryExamples"></a>
+####Binary Numbers Reference
+Binary | Decimal
+-------|-------
+0000 | 0
+0001 | 1
+0010 | 2
+0011 | 3
+0100 | 4
+0101 | 5
+0110 | 6
+0111 | 7
+1000 | 8
+1001 | 9
+1010 | 10
+1011 | 11
+1100 | 12
+1101 | 13
+1110 | 14
+1111 | 15
+
 
 ####Development Team (a-z)
 Ethan, Jay, Kevin, Spencer
