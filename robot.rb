@@ -146,8 +146,10 @@ def main
       obs_prob_matrix = Matrix.rows(tmp_array)
     end
     # update Y
-    # Here is where we push Y onto the Matrix of STates
     y = obs_prob_matrix*joint_trans_matrix
+
+    # Here is where we push Y onto the Matrix of States
+
     # update joint transitivity matrix
     joint_trans_matrix = trans_matrix*y
     # end of callback function ------------------------
