@@ -1,6 +1,9 @@
 #!env/bin/ruby
 require 'matrix'
 
+@global_rows = Integer.new
+@global_columns = Integer.new
+
 def get_observations
   ret_array = Array.new()
   # split line into array.. 2ez... #WinningLOC
@@ -101,6 +104,8 @@ class World
 end
 
 def main
+  # Welcome To program/Start Button
+
   # read observations from input file
   observations = get_observations
   # generate a new world given the input file
@@ -118,8 +123,17 @@ def main
   obs_prob_matrix = Matrix.build(world.size, world.size) {0}
   # Initialize Y
   y = Matrix.zero(0)
+  @global_rows = world.height
+  @global_columns = world.width
+  # Push Transitivty Matrix onto State Matrix
+
+
   # update matricies for each observation
   observations.each do |observation|
+    # Hang For Next Button
+    # Main Loop for button Presses
+
+    #put this into a button callback function------
     # print current iteration for debugging
     puts "observation: #{observation}\n"
     # for each room: update the observation probability matrix
@@ -132,9 +146,11 @@ def main
       obs_prob_matrix = Matrix.rows(tmp_array)
     end
     # update Y
+    # Here is where we push Y onto the Matrix of STates
     y = obs_prob_matrix*joint_trans_matrix
     # update joint transitivity matrix
     joint_trans_matrix = trans_matrix*y
+    # end of callback function ------------------------
   end
   # after final iteration, calculate most likely room
   # sum components of y and calculate E
@@ -150,6 +166,8 @@ def main
   e.each_with_index {|e, i| if e == max then a.push(i) end}
   # debugging
   puts a
+
+  #post message: a + ' is the most likely State'
 end
 
 main
