@@ -1,5 +1,6 @@
 #!env/bin/ruby
 require 'matrix'
+require './GUI/robotGraphics.rb'
 
 def get_observations
   ret_array = Array.new()
