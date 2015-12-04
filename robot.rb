@@ -1,9 +1,6 @@
 #!env/bin/ruby
 require 'matrix'
 
-@global_rows = Integer.new
-@global_columns = Integer.new
-
 def get_observations
   ret_array = Array.new()
   # split line into array.. 2ez... #WinningLOC
@@ -123,8 +120,8 @@ def main
   obs_prob_matrix = Matrix.build(world.size, world.size) {0}
   # Initialize Y
   y = Matrix.zero(0)
-  @global_rows = world.height
-  @global_columns = world.width
+  # @global_rows = world.height
+  # @global_columns = world.width
   # Push Transitivty Matrix onto State Matrix
 
 
