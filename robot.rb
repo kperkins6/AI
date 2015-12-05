@@ -5,7 +5,7 @@ require './GUI/robotGraphics.rb'
 def get_observations
   ret_array = Array.new()
   # split line into array.. 2ez... #WinningLOC
-  File.open('in').readline.split(' ').each do |observation|
+  File.open(ARGV[1].to_s).readline.split(' ').each do |observation|
     val = 0
     if observation.include? "N" then val += 8 end
     if observation.include? "S" then val += 4 end
@@ -20,9 +20,16 @@ def get_world
   # instanciate world
   array_world = Array.new()
   # open our input file
-  File.readlines('world').each do |line|
-    # add the correct squares to 'world'
-    array_world.push(line.split(" ").map {|x| "%04b" % x})
+  File.readlines(ARGV[0].to_s).each do |line|
+    #turn line into an array for ease of use
+    line = line.split(" ")
+    # check if world is in binary or "NSWE" form
+    if line.first.length == 4
+        array_world.push(line)
+    else
+      # add to world converting string to binary
+      array_world.push(line.map {|x| "%04b" % x})
+    end
   end
   # Matrix dat hoe
   return Matrix.rows(array_world)
@@ -30,11 +37,11 @@ end
 
 def get_error
   # error probability is read from command line
-  e = ARGV[0].to_f
+  e = ARGV[2].to_f
   # populate array and return it
   # P(E)**d * (1-P(E))**4-d
   # rounded for ease. May be changed for more accuracy!
-  return Array.new(5){|index| (e**index * (1-e)**(4-index)).round(6)}
+  return Array.new(5){|index| (e**index * (1-e)**(4-index)).round(4)}
 end
 
 def get_initial_trans_for(_world)
@@ -103,7 +110,6 @@ end
 
 def main
   # Welcome To program/Start Button
-
   # read observations from input file
   observations = get_observations
   # generate a new world given the input file
@@ -124,16 +130,32 @@ def main
   # @global_rows = world.height
   # @global_columns = world.width
   # Push Transitivty Matrix onto State Matrix
+  # read observations from input file
+  observations = get_observations
+  # generate a new world given the input file
+  world = World.new(get_world)
+  # generate error table
+  error = get_error
+  # initialize transitivity matrix for problem given a world
+  trans_matrix = get_initial_trans_for(world)
+  # initialize joint prediction matrix given a world
+  joint_prediction_matrix = get_initial_joint_prediction_matrix_for(world)
+  # initialize joint transitivity matrix for first iteration
+  joint_trans_matrix = trans_matrix*joint_prediction_matrix
+  # Initialize Observation Probability Matrix
+  obs_prob_matrix = Matrix.build(world.size, world.size) {0}
+  # Initialize Y
+  y = Matrix.zero(0)
+  # @global_rows = world.height
+  # @global_columns = world.width
+  # Push Transitivty Matrix onto State Matrix
 
-
-  # update matricies for each observation
   observations.each do |observation|
     # Hang For Next Button
     # Main Loop for button Presses
-
     #put this into a button callback function------
     # print current iteration for debugging
-    puts "observation: #{observation}\n"
+    # puts "observation: #{observation}\n"
     # for each room: update the observation probability matrix
     world.rooms.each_with_index do |room, row, col|
       # must copy matrix into an array in order to change single components
@@ -165,8 +187,10 @@ def main
   # push the room index of the most likely rooms
   e.each_with_index {|e, i| if e == max then a.push(i) end}
   # debugging
-  puts a
-
+  puts "Most Likely States:"
+  a.each do |x|
+    print "(#{x/world.width}, #{x%world.width}) #{e[x].round(6)}\n"
+  end
   #post message: a + ' is the most likely State'
 end
 
