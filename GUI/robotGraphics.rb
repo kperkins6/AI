@@ -1,11 +1,12 @@
 #!/usr/bin/ruby -w
 require "gtk2"
 
-$rows = 35
+$rows = 10
 $columns = 35
 
 class RubyApp < Gtk::Window
 	$defectiveCount=0
+
 	def initialize
 		super
 			set_title "Robot Localization"
@@ -13,18 +14,43 @@ class RubyApp < Gtk::Window
 			Gtk.main_quit
 		end
 		init_ui
+		$button2 = Gtk::Button.new("Quit")#Creates a Button Widget
+		$button2.signal_connect("clicked"){Gtk.main_quit}  # Exit upon clicking here
 		set_default_size 800,800
 		set_window_position Gtk::Window::POS_CENTER
 		show_all
+
 	end
 
 	def init_ui
 		@canvas = Gtk::DrawingArea.new
-		@button = Gtk::Button.new("hey")
+		# #@button = Gtk::Button.new("hey")
+		# $v1 = Gtk::VBox.new true, 0
+		# $h1 = Gtk::HBox.new true, 0
+		# $h2 = Gtk::HBox.new true, 0
+		# @canvas = Gtk::DrawingArea.new
+		#
+		# #Buttons
+		# $button1 = Gtk::Button.new("Previous")#Creates a Button Widget
+		# $button1.signal_connect("clicked"){on_expose}  # previous state
+		# $button2 = Gtk::Button.new("Next")#Creates a Button Widget
+		# $button2.signal_connect("clicked"){on_expose}  # Next state calculate
+		# $button3 = Gtk::Button.new("Quit")#Creates a Button Widget
+		# $button3.signal_connect("clicked"){Gtk.main_quit}  # Exit upon clicking here
+		#
+		# #fill vertical box with 2 vertical stacks
+		# $v1.pack_start($h1, expand = true, fill = true, padding = 0)
+		# $v1.pack_start($h3, expand = false, fill = true, padding = 0)
+		#
+		# #fill horizontal box with button and text
+		# $h2.pack_start($button1, expand = false, fill = false, padding = 3)
+		# $h2.pack_start($button2, expand = false, fill = false, padding = 3)
+		# $h1.pack_start($canvas, expand = true, fill = true, padding = 0)
 		@canvas.signal_connect "expose-event" do
 			on_expose
 		end
 		add(@canvas)
+		# add($button1)
 	end
 
 	def on_expose
@@ -80,12 +106,20 @@ class RubyApp < Gtk::Window
 #
 
 	def draw_colors(cr,memory)
-		for row in 1..($rows) do
+		for row in 0..($rows-1) do
 		#for row in 1..33 do
-			for col in 1..($columns) do
+			for col in 0..($columns-1) do
 			#for col in 1..33 do
-
+			if memory[row][col] == 0 #red
 				cr.set_source_rgb 0, 0, 0
+			elsif memory[row][col] == 1 #light blue new
+				cr.set_source_rgb 0, 255, 0
+			elsif memory[row][col] == 2 #blue normal
+				cr.set_source_rgb 0, 0, 255
+			else #dark blue aged
+				cr.set_source_rgb 255, 0, 255
+			end
+				#cr.set_source_rgb 0, 0, 0
 				#rectangle: the first two paramters are the x, y corrdinates of the top left corner of the rectangle
 				# the last two paramters are the width and the height of the rectange
 				cr.rectangle 20*(col + 1), 20*(row + 1), 19, 19
@@ -181,4 +215,5 @@ class RubyApp < Gtk::Window
 end
 Gtk.init
 window = RubyApp.new
+window.add($v1)
 Gtk.main
